@@ -1,4 +1,4 @@
-Information retrvial project 2014
+Information retrieval project 2014
 =================================
 
 ## Download the data
