@@ -32,9 +32,15 @@
         <field column="userId"    xpath="/mediawiki/page/revision/contributor/id" />
         <field column="text"      xpath="/mediawiki/page/revision/text" />
         <field column="timestamp" xpath="/mediawiki/page/revision/timestamp" dateTimeFormat="yyyy-MM-dd'T'hh:mm:ss'Z'" />
-        <field column="$skipDoc"  regex="^#REDIRECT .*" replaceWith="true" sourceColName="text"/>
+        <field column="$skipDoc"  regex="^#REDIRECT.*" replaceWith="true" sourceColName="text"/>
+        <field column="$skipDoc"  regex="^#redirect.*" replaceWith="true" sourceColName="text"/>
         <field column="$skipDoc"  regex="^#OMDIRIGERING.*" replaceWith="true" sourceColName="text"/>
         <field column="$skipDoc"  regex="^Mall:.*" replaceWith="true" sourceColName="title"/>
+        <field column="$skipDoc"  regex="^MediaWiki.*" replaceWith="true" sourceColName="title"/>
+        <field column="$skipDoc"  regex="^Kategori:.*" replaceWith="true" sourceColName="title"/>
+        <field column="$skipDoc"  regex="^Portal:.*" replaceWith="true" sourceColName="title"/>
+        <field column="$skipDoc"  regex="^#REDIRECT .*" replaceWith="true" sourceColName="text"/>
    </entity>
  </document>
 </dataConfig>
+

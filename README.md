@@ -32,14 +32,21 @@ In the left menu at the Solr admin, choose the core Solr and select [dataimport]
 
 To then search in the Solr admin, go to the core (left menu) and select [Query](http://localhost:8983/solr/#/solr/query).
 
-If we for example want to search for KTH in the title, we can do the following:
+If we for example want to search for Fredrik Reinfeldt in the title:
 
-    q: title:KTH
+    q: titleText:"Fredrik Reinfeldt"
 
-If we want to search in the text and the title:
+Or if we want to search for Tomte in the text and the title:
 
-    q: text:KTH title:KTH
+    q: titleText:Tomte text:Tomte
+
+# Ranked retrieval
 
 Here we can read more about ranked retrieval and relevancy:
 
 * https://wiki.apache.org/solr/SolrRelevancyFAQ
+
+# TODO
+
+* Remove tags from wikipedia articles, so it's only plain text
+* Make sure no redirect articles are indexed
