@@ -15,3 +15,5 @@ solr-4.7.2/example/example-DIH/solr/solr/data
 solr-4.7.2/example/example-DIH/solr/mail/
 solr-4.7.2/example/example-DIH/solr/rss/
 solr-4.7.2/example/example-DIH/solr/tika/
+*.log
+*.properties
