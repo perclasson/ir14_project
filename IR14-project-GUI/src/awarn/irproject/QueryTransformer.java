@@ -1,26 +1,27 @@
+package awarn.irproject;
 /**
- * A class designed to translate a user generated query into
- * a search solr-URL.
+ * A class designed to translate a user generated query into a search solr-URL.
  * 
- * Input: user query String
- * Output: URL String
+ * Input: user query String Output: URL String
+ * 
  * @author Mwli
  *
  */
-public class QueryToUrl {
-	QueryToUrl(String[] args){
+public class QueryTransformer {
+	public QueryTransformer(String[] args) {
 		interpret(args);
 	}
-	public void interpret(String[] args) {
-		//TODO: Om vi måste skydda så ska stoppa in backslash i
-		// {"+", "-", "&", "|", "!", "(", ")", "{", "}", "[", "]", "^", 
+
+	public static String interpret(String[] args) {
+		// TODO: Om vi mï¿½ste skydda sï¿½ ska stoppa in backslash i
+		// {"+", "-", "&", "|", "!", "(", ")", "{", "}", "[", "]", "^",
 		// "\"", "~", "*", "?", ":", "\\" , "/"};
 		StringBuilder sb = new StringBuilder();
-		sb.append("localhost:8983/solr/solr/select?q=");
-		for(String word : args){
+		sb.append("http://localhost:8983/solr/solr/select?q=");
+		for (String word : args) {
 			char[] characters = word.toCharArray();
-			for(char character : characters){
-				switch(character){
+			for (char character : characters) {
+				switch (character) {
 				case '!':
 					sb.append("%21");
 					break;
@@ -42,10 +43,10 @@ public class QueryToUrl {
 				case '\'':
 					sb.append("%27");
 					break;
-				case '(': //TODO: osäker
+				case '(': // TODO: osï¿½ker
 					sb.append("%28");
 					break;
-				case ')': //TODO: osäker
+				case ')': // TODO: osï¿½ker
 					sb.append("%29");
 					break;
 				case '*':
@@ -102,7 +103,7 @@ public class QueryToUrl {
 				case '_':
 					sb.append("%5F");
 					break;
-				case '´':
+				case 'ï¿½':
 					sb.append("%60");
 					break;
 				case '{':
@@ -111,36 +112,28 @@ public class QueryToUrl {
 				case '}':
 					sb.append("%7C");
 					break;
-					//TODO:
-//				case 'å': //dec: 134, 132, 148, 143, 142, 153
-//					sb.append("%E5");
-//				case 'ä':
-//					sb.append("%E4");
-//				case 'ö':
-//					sb.append("%F6");
-					
-//				case 'Å':
-//					sb.append("%21");
-//				case 'Ä':
-//					sb.append("%21");
-//				case 'Ö':
-//					sb.append("%21");	
+				// TODO:
+				// case 'ï¿½': //dec: 134, 132, 148, 143, 142, 153
+				// sb.append("%E5");
+				// case 'ï¿½':
+				// sb.append("%E4");
+				// case 'ï¿½':
+				// sb.append("%F6");
+
+				// case 'ï¿½':
+				// sb.append("%21");
+				// case 'ï¿½':
+				// sb.append("%21");
+				// case 'ï¿½':
+				// sb.append("%21");
 				default:
 					sb.append(character);
 				}
 			}
-			sb.append("+"); //TODO
+			sb.append("+"); // TODO
 		}
-		sb.deleteCharAt(sb.length()-1);
+		sb.deleteCharAt(sb.length() - 1);
 		sb.append("&wt=json&indent=true");
-		System.out.println(sb.toString());
+		return sb.toString();
 	}
-	/**
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new QueryToUrl(args);
-	}	
 }
-

@@ -90,7 +90,6 @@ public class PageRank {
 			x = xp;
 			xp = new double[numberOfDocs];
 		}
-
 		return x;
 	}
 }

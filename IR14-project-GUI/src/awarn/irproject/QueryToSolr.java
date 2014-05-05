@@ -1,3 +1,4 @@
+package awarn.irproject;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -51,7 +52,7 @@ public class QueryToSolr {
 				 * Appends a ^ char at the end of each word beginning with a capital letter
 				 * and also assumes it has a higher chance of appearing in the title of a text.
 				 */
-				if (word.matches("[A-Z]+.*") || word.matches("[ÅÄÖ]+.*") || args.length == 1) {
+				if (word.matches("[A-Z]+.*") || word.matches("[ï¿½ï¿½ï¿½]+.*") || args.length == 1) {
 					titleWords.add(word);
 					sb.append("^");
 				}
