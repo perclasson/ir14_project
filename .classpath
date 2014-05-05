@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="external-jars/com.google.guava_15.0.0.v201402241730.jar"/>
+	<classpathentry kind="lib" path="external-jars/jsoup-1.7.3.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.confluence.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.core.ant_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.core.osgi_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.html.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.markdown.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.mediawiki.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.textile.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.tracwiki.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="lib" path="external-jars/org.eclipse.mylyn.wikitext.twiki.core_2.1.0.N20140325-2210.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
