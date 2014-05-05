@@ -11,8 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.*;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -27,8 +28,8 @@ public class App extends Application {
     	
         primaryStage.setTitle("Summary search");
         
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_LEFT);
+        final GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
@@ -36,17 +37,27 @@ public class App extends Application {
         Text scenetitle = new Text("Start typing:");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
-
-        TextField userTextField = new TextField();
-        grid.add(userTextField, 0, 1);
         
-        TableView<Summary> table = new TableView<Summary>();
-        grid.add(table, 0, 2, 4, 2);
+        Text webtitle = new Text("Chosen document:");
+        webtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        grid.add(webtitle, 0, 5, 2, 1);
+    	
+    	final WebView wv = new WebView();
+    	grid.add(wv, 0, 6, 10, 2);
+
+        final TextField searchTextField = new TextField();
+        grid.add(searchTextField, 0, 1, 7, 1);
+        
+        final TableView<Summary> table = new TableView<Summary>();
+        grid.add(table, 0, 2, 10, 2);
 
         
+        /**
+         * Create the observable list to which we will add the summaries.
+         */
         List<Summary> summaries = new ArrayList<Summary>();
  
-	    ObservableList<Summary> observableSummaries = FXCollections.observableList(summaries);
+	    final ObservableList<Summary> observableSummaries = FXCollections.observableList(summaries);
 	    observableSummaries.addListener(new ListChangeListener<Summary>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Summary> change) {
@@ -57,9 +68,11 @@ public class App extends Application {
 	    table.setItems(observableSummaries);
 
 	    TableColumn<Summary,String> summaryCol = new TableColumn<>("Summary");
+	    summaryCol.setMinWidth(600);
 	    summaryCol.setCellValueFactory(new PropertyValueFactory("summary"));
-	    TableColumn<Summary,Button> linkCol = new TableColumn<>("Link");
 	    
+	    TableColumn<Summary,Button> linkCol = new TableColumn<>("Link");
+	    linkCol.setMinWidth(100);
 	    Callback<TableColumn<Summary, Button>, TableCell<Summary, Button>> linkColumnCellFactory = //
                 new Callback<TableColumn<Summary, Button>, TableCell<Summary, Button>>() {
 
@@ -76,7 +89,7 @@ public class App extends Application {
                         } else {
                             final Button linkBtn = new Button("print name");
                             param.getTableView().getSelectionModel().select(getIndex());
-                            Summary summary = table.getSelectionModel().getSelectedItem();
+                            final Summary summary = table.getSelectionModel().getSelectedItem();
                             linkBtn.setText(summary.getLink());
                             
                             linkBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -85,6 +98,9 @@ public class App extends Application {
                                 public void handle(ActionEvent event) {
                                 	if (summary != null) {
                                         System.out.println(summary.getLink());
+                                        
+                                        WebEngine we = wv.getEngine();
+                                    	we.load("https://en.wikipedia.org");
                                     }
                                 }
                             });
@@ -107,22 +123,24 @@ public class App extends Application {
             public void handle(ActionEvent event) {
             	/*
             	 * TODO: Get results of search here.
+            	 * Make a Summary object for each resulting file(?) and
+            	 * add it to observableSummaries. 
             	 */
-            	System.out.println("Starting search...");
-            	
-            	//
-            	Summary s1 = new Summary();
-            	s1.setSummary("Bla bla\nbla");
-            	s1.setLink("Link to Bla bla");
-            	observableSummaries.add(s1);
+            	System.out.println("Starting search for: "+searchTextField.getText());
+
             	
             	System.out.println("Done.");
+            	//
+            	Summary s1 = new Summary();
+            	s1.setSummary("Bla bla agdrassa asjdsajd asnsfa asd asdsd.\nbla sjdf aaaa adm sa.");
+            	s1.setLink("Link to Bla bla");
+            	observableSummaries.add(s1);
             }
             
         });
-        grid.add(searchBtn, 2, 1);
+        grid.add(searchBtn, 7, 1, 2, 1);
 
-        Scene scene = new Scene(grid, 500, 350);
+        Scene scene = new Scene(grid, 1000, 600);
         primaryStage.setScene(scene);
         
         primaryStage.show();
