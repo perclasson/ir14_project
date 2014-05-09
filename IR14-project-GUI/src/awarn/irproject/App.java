@@ -1,5 +1,11 @@
 package awarn.irproject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,8 +112,9 @@ public class App extends Application {
 										System.out.println(summary.getLink());
 
 										WebEngine we = wv.getEngine();
-//										we.load("https://en.wikipedia.org");
-										we.load("https://sv.wikipedia.org/wiki/" + summary.getLink());
+										// we.load("https://en.wikipedia.org");
+										we.load("https://sv.wikipedia.org/wiki/"
+												+ summary.getLink());
 									}
 								}
 							});
@@ -131,14 +138,14 @@ public class App extends Application {
 				System.out.println("Starting search for: "
 						+ searchTextField.getText());
 				String searchQuery = searchTextField.getText();
-				String url = QueryTransformer.interpret(searchQuery.split(" "));
+				String url = QueryTransformer.interpret(searchQuery);
 				List<Sentence> summaries = new JsonParser().search(url);
 
 				for (Sentence summary : summaries) {
 					Summary newSummary = new Summary();
 					newSummary.setSummary(summary.sentence);
 					newSummary.setLink(summary.name);
-//					newSummary.setLink("testing");
+					// newSummary.setLink("testing");
 					observableSummaries.add(newSummary);
 				}
 			}
