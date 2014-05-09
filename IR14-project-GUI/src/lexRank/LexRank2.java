@@ -37,7 +37,7 @@ public class LexRank2 {
 	}
 
 	public Sentence getSentRanks() {
-		if (sentRanks != null && sentRanks.length > 1) {
+		if (sentRanks != null && sentRanks.length > 0) {
 			return sentRanks[0];
 		} else {
 			return null;

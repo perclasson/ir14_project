@@ -1,7 +1,6 @@
 package awarn.irproject;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -45,11 +44,11 @@ public class JsonParser {
 	// TODO: hur många dokument ska vi ta med?
 	private static final int MAX_NO_DOCS = 5;
 
-	public List<String> search(String urlString) {
+	public List<Sentence> search(String urlString) {
 		ArrayList<String> titles = new ArrayList<String>();
 		HashMap<Integer, String[]> sentences = new HashMap<Integer, String[]>();
 		HashMap<Integer, String[]> names = new HashMap<Integer, String[]>();
-		List<String> summaries = new ArrayList<>();
+		List<Sentence> summaries = new ArrayList<>();
 
 		try {
 			// A Solr url
@@ -72,12 +71,15 @@ public class JsonParser {
 			int no_docs = 0;
 			while (it.hasNext() && no_docs < MAX_NO_DOCS) {
 				JSONObject doc = (JSONObject) it.next();
-				if (((String) doc.get("text")).startsWith("#REDIRECT"))
+				String text = (String) doc.get("text");
+				String pre = text.substring(0, 15).toLowerCase();
+				if (pre.startsWith("#redirect") || pre.startsWith("#omdirigering"))
 					continue;
 
 				titles.add((String) doc.get("titleText"));
 				// Remove all unnecessary tags and blocks of text we don't need
-				String stripped = WikimediaTransformer.wikiToPlainText((String) doc.get("text"));
+				String stripped = WikimediaTransformer.wikiToPlainText(text);
+//				String stripped = stripper(text);
 				// Remove all special characters, turn to lower case and split
 				// into sentences
 				String[] sent = getSentences(stripped);
@@ -91,7 +93,8 @@ public class JsonParser {
 				// TODO: One lexrank per document or one lexrank in total?
 				LexRank2 lexRank = new LexRank2(n, sent);
 				Sentence lexRankSentence = lexRank.getSentRanks();
-				summaries.add(lexRankSentence.sentence);
+				lexRankSentence.name = ((String)doc.get("titleText")).replaceAll(" ", "_");
+				summaries.add(lexRankSentence);
 
 				System.out.println(no_docs++);
 			}

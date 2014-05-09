@@ -18,7 +18,7 @@ public class PageRank {
 	 * If there are no outlinks from i, then the value corresponding key i is
 	 * null.
 	 */
-	private static Hashtable<Integer, Hashtable<Integer, Boolean>> link = new Hashtable<Integer, Hashtable<Integer, Boolean>>();
+	private static Hashtable<Integer, Hashtable<Integer, Boolean>> link;
 
 	/** The number of outlinks from each node. */
 	private static int[] out;
@@ -36,6 +36,7 @@ public class PageRank {
 
 	public static double[] ComputeRank(int n, ArrayList<Integer>[] adjList) {
 		numberOfDocs = n;
+		link = new Hashtable<Integer, Hashtable<Integer, Boolean>>();
 		readLexGraph(adjList);
 		return noSinkPageRank();
 	}

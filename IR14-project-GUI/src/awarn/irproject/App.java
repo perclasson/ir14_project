@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import jdk.internal.org.objectweb.asm.tree.analysis.Interpreter;
+import lexRank.LexRank2.Sentence;
 
 public class App extends Application {
 	public static void main(String[] args) {
@@ -105,7 +106,8 @@ public class App extends Application {
 										System.out.println(summary.getLink());
 
 										WebEngine we = wv.getEngine();
-										we.load("https://en.wikipedia.org");
+//										we.load("https://en.wikipedia.org");
+										we.load("https://sv.wikipedia.org/wiki/" + summary.getLink());
 									}
 								}
 							});
@@ -130,12 +132,13 @@ public class App extends Application {
 						+ searchTextField.getText());
 				String searchQuery = searchTextField.getText();
 				String url = QueryTransformer.interpret(searchQuery.split(" "));
-				List<String> summaries = new JsonParser().search(url);
+				List<Sentence> summaries = new JsonParser().search(url);
 
-				for (String summary : summaries) {
+				for (Sentence summary : summaries) {
 					Summary newSummary = new Summary();
-					newSummary.setSummary(summary);
-					newSummary.setLink("Link to Bla bla");
+					newSummary.setSummary(summary.sentence);
+					newSummary.setLink(summary.name);
+//					newSummary.setLink("testing");
 					observableSummaries.add(newSummary);
 				}
 			}
