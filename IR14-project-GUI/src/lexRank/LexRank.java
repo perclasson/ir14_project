@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import awarn.irproject.App;
 
-public class LexRank2 {
+public class LexRank {
 	private static boolean DEBUG = false;
 	private static final double LIMIT = 0.1;
 
@@ -20,9 +20,9 @@ public class LexRank2 {
 
 	String[] names;
 	String[] sentences;
-	private Sentence[] sentRanks;
+	public Sentence[] sentRanks;
 
-	public LexRank2(String[] names, String[] sentences) {
+	public LexRank(String[] names, String[] sentences) {
 		this.names = names;
 		this.sentences = sentences;
 
@@ -131,8 +131,8 @@ public class LexRank2 {
 				}
 				sum = sum / len.get(name1) / len.get(name2);
 
-				if (sen1.keySet().size() < App.MIN_WORDS_FOR_SENCENCE
-						|| sen2.keySet().size() < App.MIN_WORDS_FOR_SENCENCE) {
+				if (sen1.keySet().size() < App.MIN_WORDS_FOR_SENTENCE
+						|| sen2.keySet().size() < App.MIN_WORDS_FOR_SENTENCE) {
 					sum = 0;
 				}
 

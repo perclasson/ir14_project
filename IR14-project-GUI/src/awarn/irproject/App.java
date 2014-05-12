@@ -27,20 +27,23 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import lexRank.LexRank2.Sentence;
+import lexRank.LexRank.Sentence;
 
 public class App extends Application {
 	// Return one sentence from all docs or not
 	public static final boolean ALL_SENTENCES = true;
 
 	// Maximum number of docs used from solr search
-	public static final int MAX_NO_DOCS = 10;
+	public static final int MAX_NO_DOCS = 5;
 
 	// Minimum number of sentences for a doc to be used (to avoid small docs)
-	public static final int MIN_SENTENCES_FOR_DOC = 20;
+	public static final int MIN_SENTENCES_FOR_DOC = 1;
 
 	// Minimum number of words in sentence to be used
-	public static final int MIN_WORDS_FOR_SENCENCE = 8;
+	public static final int MIN_WORDS_FOR_SENTENCE = 5;
+	
+	// Max position for sentence in document, set to infinity to include all
+	public static final int MAX_SENTENCE_POSITION = 10; 
 
 	public static void main(String[] args) {
 		launch(args);

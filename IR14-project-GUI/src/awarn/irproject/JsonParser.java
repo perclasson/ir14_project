@@ -15,8 +15,8 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import lexRank.LexRank2;
-import lexRank.LexRank2.Sentence;
+import lexRank.LexRank;
+import lexRank.LexRank.Sentence;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -43,13 +43,12 @@ public class JsonParser {
 	// TODO: läs in från URL
 	private static final String filePath = "res/test2.json";
 
-	
-
 	public List<Sentence> search(String urlString) {
 		ArrayList<String> titles = new ArrayList<String>();
 		HashMap<Integer, String[]> sentences = new HashMap<Integer, String[]>();
 		HashMap<Integer, String[]> names = new HashMap<Integer, String[]>();
 		List<Sentence> summaries = new ArrayList<>();
+		HashMap<String, Integer> sentencePosition = new HashMap<>();
 
 		try {
 			// A Solr url
@@ -70,62 +69,75 @@ public class JsonParser {
 			@SuppressWarnings("rawtypes")
 			Iterator it = docs.iterator();
 			int no_docs = 0;
-			
+
 			LinkedList<String> allSentences = new LinkedList<>();
 			LinkedList<String> allNames = new LinkedList<>();
-			
+
 			while (it.hasNext() && no_docs < App.MAX_NO_DOCS) {
 				JSONObject doc = (JSONObject) it.next();
 				String text = (String) doc.get("text");
 				String pre = text.substring(0, 15).toLowerCase();
-				if (pre.startsWith("#redirect") || pre.startsWith("#omdirigering"))
+				if (pre.startsWith("#redirect")
+						|| pre.startsWith("#omdirigering"))
 					continue;
 
 				// Remove all unnecessary tags and blocks of text we don't need
-				//String stripped = WikimediaTransformer.wikiToPlainText(text);
+				// String stripped = WikimediaTransformer.wikiToPlainText(text);
 				String stripped = stripper(text);
-				
+
 				titles.add((String) doc.get("titleText"));
-				
+
 				// Remove all special characters, turn to lower case and split
 				// into sentences
 				String[] sent = getSentences(stripped);
 				String[] n = new String[sent.length];
 				for (int a = 0; a < sent.length; a++) {
-					n[a] = "d" + no_docs + "s" + a;
+					String name = "d" + no_docs + "s" + a;
+					n[a] = name;
+					sentencePosition.put(name, a);
 				}
-				
+
 				if (sent.length < App.MIN_SENTENCES_FOR_DOC) {
+					System.out.println("Skip doc");
 					continue;
 				}
-					
+
 				allSentences.addAll(Arrays.asList(sent));
 				allNames.addAll(Arrays.asList(n));
-				
+
 				sentences.put(no_docs, sent);
 				names.put(no_docs, n);
 
 				// TODO: One lexrank per document or one lexrank in total?
-				LexRank2 lexRank = new LexRank2(n, sent);
-				Sentence lexRankSentence = lexRank.getSentRanks();
-				lexRankSentence.name = ((String)doc.get("titleText")).replaceAll(" ", "_");
+				LexRank lexRank = new LexRank(n, sent);
+				Sentence lexRankSentence = getSentence(lexRank.sentRanks, sentencePosition);
+				if (lexRankSentence == null) {
+					lexRankSentence = lexRank.getSentRanks();
+				}
+				lexRankSentence.name = ((String) doc.get("titleText"))
+						.replaceAll(" ", "_");
 				summaries.add(lexRankSentence);
 
 				no_docs++;
 			}
-			
+
+			System.out.println("Number of docs: " + no_docs);
 			
 			if (App.ALL_SENTENCES && no_docs > 0) {
 				String[] allNameArray = allNames.toArray(new String[0]);
 				String[] allSentArray = allSentences.toArray(new String[0]);
-				LexRank2 lexRank = new LexRank2(allNameArray, allSentArray);
-				Sentence lexRankSentence = lexRank.getSentRanks();
+				LexRank lexRank = new LexRank(allNameArray, allSentArray);
+				Sentence lexRankSentence = getSentence(lexRank.sentRanks, sentencePosition);
+				
+				if (lexRankSentence == null) {
+					lexRankSentence = lexRank.getSentRanks();
+				}
+				
 				lexRankSentence.name = "All";
 				List<Sentence> oneSommary = new ArrayList<Sentence>();
 				oneSommary.add(lexRankSentence);
 				return oneSommary;
 			}
-			
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -137,6 +149,17 @@ public class JsonParser {
 
 		return summaries;
 
+	}
+
+	private Sentence getSentence(Sentence[] sentRanks,
+			HashMap<String, Integer> sentencePosition) {
+		for (Sentence s : sentRanks) {
+			Integer position = sentencePosition.get(s.name);
+			if (position != null && position < App.MAX_SENTENCE_POSITION) {
+				return s;
+			}
+		}
+		return null;
 	}
 
 	// TODO: kombinera och kolla fler patterns samtidigt?
@@ -175,7 +198,7 @@ public class JsonParser {
 			sb.delete(m.start(), m.end());
 			m.reset();
 		}
-		
+
 		// System.out.println(sb.toString());
 
 		// Stripp all "<ref>...</ref>" and "<ref .../>"
@@ -225,12 +248,10 @@ public class JsonParser {
 				sb.delete(m.start(), sb.indexOf("\n", m.end()));
 				m.reset();
 			}
-		}
-		catch (StringIndexOutOfBoundsException e) {
-			
+		} catch (StringIndexOutOfBoundsException e) {
+
 		}
 		// System.out.println(sb.toString());
-		
 
 		// Stripp all "nbsp" (hard spaces)
 		p = Pattern.compile("nbsp");
