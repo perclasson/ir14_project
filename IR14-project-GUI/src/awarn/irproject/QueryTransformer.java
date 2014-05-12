@@ -28,7 +28,7 @@ public class QueryTransformer {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		sb.append("&wt=json&indent=true");
+		sb.append("&wt=json&indent=true&rows=50");
 		return sb.toString();
 	}
 }
