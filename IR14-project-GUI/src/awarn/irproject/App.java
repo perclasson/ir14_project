@@ -1,7 +1,11 @@
 package awarn.irproject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -41,9 +45,9 @@ public class App extends Application {
 
 	// Minimum number of words in sentence to be used
 	public static final int MIN_WORDS_FOR_SENTENCE = 5;
-	
+
 	// Max position for sentence in document, set to infinity to include all
-	public static final int MAX_SENTENCE_POSITION = 10; 
+	public static final int MAX_SENTENCE_POSITION = 10;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -131,8 +135,33 @@ public class App extends Application {
 
 										WebEngine we = wv.getEngine();
 										// we.load("https://en.wikipedia.org");
-										we.load("https://sv.wikipedia.org/wiki/"
-												+ summary.getLink());
+										try {
+											String summaryText = summary
+													.getSummary();
+											if (summaryText.length() > 100) {
+												summaryText = summaryText.substring(0, 99);
+												summaryText = summaryText.substring(0, summaryText.lastIndexOf(" "));
+											}
+											String audioUrl = "http://translate.google.com/translate_tts?ie=UTF-8&tl=sv-se&q="
+													+ URLEncoder.encode(
+															summaryText,
+															"UTF-8");
+											StringBuilder sb = new StringBuilder(
+													audioUrl);
+											Pattern p = Pattern
+													.compile("\\%00\\+");
+											Matcher m = p.matcher(sb);
+											while (m.find()) {
+												sb.delete(m.start(),
+														m.end() - 1);
+												m.reset();
+											}
+											audioUrl = sb.toString();
+											we.load(audioUrl);
+											System.out.println(audioUrl);
+										} catch (UnsupportedEncodingException e) {
+											e.printStackTrace();
+										}
 									}
 								}
 							});

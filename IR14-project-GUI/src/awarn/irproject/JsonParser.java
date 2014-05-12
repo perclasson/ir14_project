@@ -133,7 +133,7 @@ public class JsonParser {
 					lexRankSentence = lexRank.getSentRanks();
 				}
 				
-				lexRankSentence.name = "All";
+				lexRankSentence.name = "Listen";
 				List<Sentence> oneSommary = new ArrayList<Sentence>();
 				oneSommary.add(lexRankSentence);
 				return oneSommary;
