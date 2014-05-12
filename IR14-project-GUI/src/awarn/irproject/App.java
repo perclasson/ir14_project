@@ -1,32 +1,47 @@
 package awarn.irproject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.application.*;
-import javafx.collections.*;
-import javafx.event.*;
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import jdk.internal.org.objectweb.asm.tree.analysis.Interpreter;
 import lexRank.LexRank2.Sentence;
 
 public class App extends Application {
+	// Return one sentence from all docs or not
+	public static final boolean ALL_SENTENCES = true;
+
+	// Maximum number of docs used from solr search
+	public static final int MAX_NO_DOCS = 10;
+
+	// Minimum number of sentences for a doc to be used (to avoid small docs)
+	public static final int MIN_SENTENCES_FOR_DOC = 20;
+
+	// Minimum number of words in sentence to be used
+	public static final int MIN_WORDS_FOR_SENCENCE = 8;
+
 	public static void main(String[] args) {
 		launch(args);
 	}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import awarn.irproject.App;
+
 public class LexRank2 {
 	private static boolean DEBUG = false;
 	private static final double LIMIT = 0.1;
@@ -128,6 +130,12 @@ public class LexRank2 {
 					sum += tf_wx * tf_wy * idf_w * idf_w;
 				}
 				sum = sum / len.get(name1) / len.get(name2);
+
+				if (sen1.keySet().size() < App.MIN_WORDS_FOR_SENCENCE
+						|| sen2.keySet().size() < App.MIN_WORDS_FOR_SENCENCE) {
+					sum = 0;
+				}
+
 				sim[i][j] = sim[j][i] = sum;
 			}
 		}
@@ -177,10 +185,12 @@ public class LexRank2 {
 			sentRanks[i] = new Sentence(names[i], sentences[i], ranks[i]);
 		Arrays.sort(sentRanks);
 
-		for (int i = 0; i < sentRanks.length; i++) {
-			System.out
-					.println(sentRanks[i].name + ": " + sentRanks[i].pagerank);
-			System.out.println(sentRanks[i].sentence + '\n');
+		if (DEBUG) {
+			for (int i = 0; i < sentRanks.length; i++) {
+				System.out.println(sentRanks[i].name + ": "
+						+ sentRanks[i].pagerank);
+				System.out.println(sentRanks[i].sentence + '\n');
+			}
 		}
 	}
 

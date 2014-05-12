@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -41,8 +43,7 @@ public class JsonParser {
 	// TODO: läs in från URL
 	private static final String filePath = "res/test2.json";
 
-	// TODO: hur många dokument ska vi ta med?
-	private static final int MAX_NO_DOCS = 5;
+	
 
 	public List<Sentence> search(String urlString) {
 		ArrayList<String> titles = new ArrayList<String>();
@@ -69,24 +70,38 @@ public class JsonParser {
 			@SuppressWarnings("rawtypes")
 			Iterator it = docs.iterator();
 			int no_docs = 0;
-			while (it.hasNext() && no_docs < MAX_NO_DOCS) {
+			
+			LinkedList<String> allSentences = new LinkedList<>();
+			LinkedList<String> allNames = new LinkedList<>();
+			
+			while (it.hasNext() && no_docs < App.MAX_NO_DOCS) {
 				JSONObject doc = (JSONObject) it.next();
 				String text = (String) doc.get("text");
 				String pre = text.substring(0, 15).toLowerCase();
 				if (pre.startsWith("#redirect") || pre.startsWith("#omdirigering"))
 					continue;
 
-				titles.add((String) doc.get("titleText"));
 				// Remove all unnecessary tags and blocks of text we don't need
-				String stripped = WikimediaTransformer.wikiToPlainText(text);
-//				String stripped = stripper(text);
+				//String stripped = WikimediaTransformer.wikiToPlainText(text);
+				String stripped = stripper(text);
+				
+				titles.add((String) doc.get("titleText"));
+				
 				// Remove all special characters, turn to lower case and split
 				// into sentences
 				String[] sent = getSentences(stripped);
 				String[] n = new String[sent.length];
-				for (int a = 0; a < sent.length; a++)
+				for (int a = 0; a < sent.length; a++) {
 					n[a] = "d" + no_docs + "s" + a;
-
+				}
+				
+				if (sent.length < App.MIN_SENTENCES_FOR_DOC) {
+					continue;
+				}
+					
+				allSentences.addAll(Arrays.asList(sent));
+				allNames.addAll(Arrays.asList(n));
+				
 				sentences.put(no_docs, sent);
 				names.put(no_docs, n);
 
@@ -96,8 +111,21 @@ public class JsonParser {
 				lexRankSentence.name = ((String)doc.get("titleText")).replaceAll(" ", "_");
 				summaries.add(lexRankSentence);
 
-				System.out.println(no_docs++);
+				no_docs++;
 			}
+			
+			
+			if (App.ALL_SENTENCES && no_docs > 0) {
+				String[] allNameArray = allNames.toArray(new String[0]);
+				String[] allSentArray = allSentences.toArray(new String[0]);
+				LexRank2 lexRank = new LexRank2(allNameArray, allSentArray);
+				Sentence lexRankSentence = lexRank.getSentRanks();
+				lexRankSentence.name = "All";
+				List<Sentence> oneSommary = new ArrayList<Sentence>();
+				oneSommary.add(lexRankSentence);
+				return oneSommary;
+			}
+			
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -147,6 +175,7 @@ public class JsonParser {
 			sb.delete(m.start(), m.end());
 			m.reset();
 		}
+		
 		// System.out.println(sb.toString());
 
 		// Stripp all "<ref>...</ref>" and "<ref .../>"
@@ -188,15 +217,28 @@ public class JsonParser {
 
 		// Stripp text of urls
 		// TODO: bra eller dåligt?
-		p = Pattern
-				.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
-		m = p.matcher(sb);
-		while (m.find()) {
-
-			sb.delete(m.start(), sb.indexOf("\n", m.end()));
-			m.reset();
+		try {
+			p = Pattern
+					.compile("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+			m = p.matcher(sb);
+			while (m.find()) {
+				sb.delete(m.start(), sb.indexOf("\n", m.end()));
+				m.reset();
+			}
+		}
+		catch (StringIndexOutOfBoundsException e) {
+			
 		}
 		// System.out.println(sb.toString());
+		
+
+		// Stripp all "nbsp" (hard spaces)
+		p = Pattern.compile("nbsp");
+		m = p.matcher(sb);
+		while (m.find()) {
+			sb.replace(m.start(), m.end(), " ");
+			m.reset();
+		}
 
 		return sb.toString();
 	}
