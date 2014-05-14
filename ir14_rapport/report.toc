@@ -1,0 +1,28 @@
+\select@language {english}
+\select@language {english}
+\contentsline {chapter}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {1.1}Background}{2}
+\contentsline {section}{\numberline {1.2}Problem}{2}
+\contentsline {chapter}{\numberline {2}Previous/Related work}{3}
+\contentsline {section}{\numberline {2.1}Introduction: Extractive vs. Abstractive }{3}
+\contentsline {section}{\numberline {2.2}Extractive text summarization methods}{3}
+\contentsline {subsection}{\numberline {2.2.1}Lexical chains}{3}
+\contentsline {subsection}{\numberline {2.2.2}LexRank}{4}
+\contentsline {subsubsection}{Degree Centrality}{4}
+\contentsline {subsubsection}{LexRank}{4}
+\contentsline {subsubsection}{Continuous LexRank}{5}
+\contentsline {section}{\numberline {2.3}Abstractive text summarization methods}{6}
+\contentsline {subsection}{\numberline {2.3.1}Opinosis}{6}
+\contentsline {chapter}{\numberline {3}Method}{7}
+\contentsline {section}{\numberline {3.1}What we did}{7}
+\contentsline {section}{\numberline {3.2}Resources}{8}
+\contentsline {subsection}{\numberline {3.2.1}Wikipedia database}{8}
+\contentsline {subsection}{\numberline {3.2.2}Apache Solr}{8}
+\contentsline {subsection}{\numberline {3.2.3}JavaFX}{8}
+\contentsline {subsection}{\numberline {3.2.4}JSON-simple}{9}
+\contentsline {chapter}{\numberline {4}Evaluation}{10}
+\contentsline {chapter}{\numberline {5}Results}{12}
+\contentsline {chapter}{\numberline {6}Discussion}{13}
+\contentsline {chapter}{Appendices}{14}
+\contentsline {chapter}{\numberline {A}queries}{15}
+\contentsline {chapter}{\numberline {B}results}{16}

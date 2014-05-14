@@ -1,0 +1,77 @@
+\chapter{Previous/Related work}
+There are many different algorithms one can use to automatically summarize a text. Before finally deciding to use Continuous LexRank (see chapter 2.2.1) we spent quite a lot of time looking into some of the algorithms. The results of our study are presented in the following subchapters.
+
+\section{Introduction: Extractive vs. Abstractive }
+In the field of summarization one differs between extractive text summarization and abstractive text summarization. 
+
+Extractive text summarization produces a summary of a text cluster by choosing a subset of the sentences in the cluster. The way to choose sentences may differ between methods, but each method should have some way of giving each sentence a rank to be able to sort them according to relevance.  
+
+Abstractive text summarization on the other hand involves paraphrasing sections of the cluster. By definition it involves generating text not necessarily appearing in the original documents. This generation involves abstracting words used to broaden themes and synonyms of the words in the texts. This part of the field of summarization is much less developed than extractive methods, mostly because it involves another field still in its early stages: that of natural language generation. NLG is the process of turning knowledge base information into natural language that is more easily understandable to humans.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% Extractive methods %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Extractive text summarization methods}
+The following subsections give two main examples of different extractive text summarization methods and how they are used: Lexical Chains and LexRank (which we ended up using).
+
+
+\subsection{Lexical chains}
+Capturing the key points of a text is essential in automatic text summarization. A rather sophisticated approach to this is to use lexical chains. A lexical chain can be thought of as a list of words, most commonly nouns, absorbed from a document. These are meant to form a representation of the key themes of the text.
+
+Lexical chains exploit lexical cohesion between sentences. Lexical cohesion involves the selection of a lexical item that is in some way related to one occurring previously. Repetition, i.e several occurrences of identical words is one form of lexical cohesion, but cohesion also includes synonyms, near synonyms or hierarchical connections. When cohesive elements occur over a number of sentences a cohesive chain is formed.
+
+Implementing a lexical chains algorithm requires a database of words and their connections to other words. A resource that is commonly used to this end is WordNet. WordNet lists all the related words to any given word together with the relation. Given that only nouns are treated a Part-of-Speech tagger is also needed to single out the nouns of the text. These nouns are then grouped into chains according to the cohesive relations mentioned above. In the end the resulting chains are ranked according to strength. Strength can be determined using a scoring system depending on the length of the chain and the relationships it holds. These will then reveal the central themes of the text and a summary can be formulated. \cite{LexicalChains} \cite{LexChains}
+
+
+\subsection{LexRank}
+\subsubsection{Degree Centrality}
+Degree Centrality uses the fact that many sentences in a cluster of related documents are expected to be somewhat similar to each other. The way in which Degree Centrality uses this fact is by viewing the text cluster as an undirected graph. Firstly, words are given a tf-idf score and the similarity between each pair of sentences are calculated using a idf-modified-cosine score, which is a common scoring system in Information Retrieval.  Each sentence in the cluster is then represented by a node. Two sentence nodes are only connected if their similarity score exceeds a certain threshold. With this graph representation, a simple way to assess the centrality of each sentence is to count the number of similar sentences, i.e the number of neighbors the node has. This algorithm sorts all sentences according to their centrality score, in descending order, and a summary can be chosen as the k highest ranking sentences. 
+
+The Degree Centrality algorithm is interested in all similar pairs of sentences, and does not take into account the actual value of the similarity as long as they are above a certain threshold. In the graph view described above, it only counts the number of sentences that are similar according to the threshold and thus in effect removing the edges with lower similarity scores. The choice of the threshold can greatly influence the result since a high threshold will eliminate almost all similarities and a low threshold might take the weak similarities into account as well.
+ \cite{LexRank}
+
+
+\subsubsection{LexRank}
+LexRank is an extension of Degree Centrality. In Degree Centrality, all edges are treated the same way, the value of the similarities are not taken into account. The idea behind LexRank is that not all edges are equally important. In Degree Centrality, if several irrelevant sentences are similar to each other, those sentences will have a high centrality score due to the fact that they are neighbors in the centrality graph. The LexRank extension tries to eliminate this unwanted behaviour.
+
+The way LexRank does this is to use the centrality of the neighboring sentences. Each sentence has a specific centrality value, p, and shares an equal portion of this value to all its neighbors. This can be formulated as the following equation:
+
+
+
+\begin{equation}
+p(u) = \sum_{v \in adj(u)}{\frac{p(v)}{deg(v)}}
+\end{equation}
+
+where p(s) is the centrality of sentence s, deg(s) is the number of neighbors of s and adj[s] is the set of neighbors of s.
+This equation is however unsolvable, but Erkan and Radev suggests a solution to this equation using the PageRank algorithm (hence the name LexRank, Lexical PageRank) and using some form of iterative method in order to get convergence, for example Power Iteration. 
+
+
+\begin{equation}
+p(u) = \frac{d}{N}+(1-d) \cdot \sum_{v \in adj(u)}{\frac{p(v)}{deg(v)}}
+\end{equation}
+
+where d is the possibility to perform a random jump between the sentences and N is the total number of sentences. 
+\cite{LexRank}
+
+\subsubsection{Continuous LexRank}
+Neither Degree Centrality nor LexRank take the similarity weight between sentences into account, only how many similar sentences there are. The difference between LexRank and Continuous LexRank is that the cosine score is used directly in the PageRank algorithm. The graph will be denser but weighted.  
+
+\begin{equation}
+p(u) = \frac{d}{N}+(1-d) \cdot \sum_{v \in adj(u)}{\frac{idf-modified-cosine(u,v)}{\sum_{z \in adj(v)}{idf-modified-cosine(z,v)}}}p(v)
+\end{equation}
+
+These two variants of LexRank might also differ in the aspect of what counts as similar sentences. In Continuous LexRank the threshold mentioned earlier is removed, and all values of similarity are accepted. \cite{LexRank}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Abstractive methods %%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Abstractive text summarization methods}
+\subsection{Opinosis}
+Opinosis is a concept intended to condense what the authors call “highly redundant opinions”. Specifically this means that it is designed to summarize comments on products of different kinds, such as you might find in below a product page in an online store or beneath a review of a movie. The idea is that the method creates a summary that includes the most repeated parts.
+
+It does this by generating a graph of the words used, where every node stands for some specific word and points to all the other word-nodes that its word closely precedes (within a few words) in the chosen collection of opinions, along with how many times it comes up preceding that word. So this graph tells you which strings of words come up most frequently in the collection. Given some lower limit for how many times a string needs to show up to be considered, those that do are then used to construct a summary using some rather simple concepts from natural language generation, NLG, concerning the structure of sentences. In effect, the algorithm creates a rough intersect of the collection’s sentences, leaving out the parts that only show up in individual sentences or few.
+
+Opinosis is not truly abstract (the authors calls it shallowly abstract) because it does not generate words that are not in the subject collection. But it does create sentences that were not in that collection, and sidesteps many of the difficulties with NLG by utilizing its sentence structure. \cite{opinions}

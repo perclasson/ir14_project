@@ -1,0 +1,37 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{titlesec}
+\titleformat{\chapter}
+  {\normalfont\LARGE\bfseries}{\thechapter}{1em}{}
+\titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+\usepackage[swedish,english]{babel}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage[toc,page]{appendix}
+
+\title{Wikipedia Information}
+\author{Linus Hansson\\Amelia Andersson\\Per Classon\\Anton Warnhag\\Johan Ekstr\"{o}m} % š = \"{0}
+
+\begin{document}
+
+\input{chapters/title.tex}
+
+\input{chapters/introduction.tex}
+
+\input{chapters/previous.tex}
+
+\input{chapters/method.tex}
+
+\input{chapters/evaluation.tex}	
+
+\input{chapters/results.tex}
+
+\input{chapters/discussion.tex}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\input{chapters/appendices.tex}
+
+\end{document}  

@@ -1,0 +1,36 @@
+
+\chapter{Evaluation}
+To measure the efficiency of our program and algorithms we constructed an experiment where we calculated the precision of a set of 16 predefined queries (see appendix \ref{app:queries}). For each query we evaluated the summary we got back and graded it in a three graded scale as shown in Table \ref{tab:desc} below.
+
+\begin{table}[htbp]
+   \centering
+   \begin{tabular}{@{} cc @{}} 
+      \toprule
+      Grade & Description \\
+      \midrule
+      0 & Not relevant \\
+      1 & Relevant information \\
+      2 & Relevant description \\
+      \bottomrule
+   \end{tabular}
+   \caption{The grades used to evaluate our queries.}
+   \label{tab:desc}
+\end{table}
+
+
+The program had four different parameters that were changed during evaluation, and all queries were tested with each parameter setting. The parameters we used were:
+
+\begin{enumerate}
+\item Maximum number of documents returned from Solr.
+\item Minimum number of sentences required in a document.
+\item Minimum number of words in a sentence.
+\item Maximum position of a sentence in a document.
+\end{enumerate}
+
+For the first parameter (maximum number of documents) we tested the values one and five. With this parameter set to one, we only used the top ranked document from Solr in our summarization, and with the parameter set to five, we used the top five documents from Solr in the summarization. We could not entirely remove all unwanted articles (mentioned in chapter 3.2.1) when we imported the Wikipedia XML file to Solr. As a consequence to this, we used a guard in our implementation to skip documents of those types when doing the summarization.
+
+For the second parameter we used the values one and ten. This parameter had in effect that we excluded documents containing less than one (or ten) sentences. Since a lot of Wikipedia articles only references other articles or are not completed, we did not want our summarization to be built on these articles.
+
+When parsing a Wikipedia article we could end up with very short “sentences”, namely words that was in fact a link, a header, or something else entirely. To see how much these “sentences” would affect the result we used the third parameter to skip some of these. The values we used were zero and five. With zero as the limit, we accepted all sentences, even the ones described here and with five as the limit, we skipped these sentences.
+
+The last parameter told our program where in the article the summarization was to be extracted from. We run LexRank on the entire document, but when selecting the summary we wanted to be able to use the general layout of a Wikipedia article where there are somewhat of a summary in the beginning. The values we tested was five, ten and one thousand. The value one thousand can be interpreted as the entire document since most articles contain less than one thousand sentences.
