@@ -11,6 +11,15 @@ We implemented the LexRank algorithm in Java and implemented it in such a way th
 
 Between our LexRank algorithm and our GUI, we implemented a processing layer. The task of this layer was to convert the search string from the user to an Apache Solr url and then to decode the result from Solr. When performing a search in an Apache Solr database, one can choose between a few output formats of the result. We chose to receive the output in the easily parsed JSON format (Javascript Object Notation) and use the JSON-simple library to decode the result and obtain the sentences from the Wikipedia articles. From the Wikipedia articles you can gather a lot of information about revisions and user edits, but we were only interested in the title and text of the current revision of the articles and therefore only extracted these. 
 
+%TODO bild
+\begin{figure}[htbp]
+   \centering
+   \includegraphics[width=1.0\textwidth]{IrProjectWorkFlowMedSiffror.png} 
+   \caption{TODO: skriv bildtext}
+   \label{fig:workflow}
+\end{figure}
+
+
 All sentences then continued to the LexRank implementation, which ranked the sentences according to relevance to the query. The highest ranked sentences from the LexRank algorithm were then sent to back to the GUI along with the titles of the Wikipedia article containing the sentence. 
 
 \section{Resources}
