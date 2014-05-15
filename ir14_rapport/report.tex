@@ -42,7 +42,7 @@ In the field of natural language processing, one differs between extractive and 
 
 Extractive summarization produces a summary of a text cluster by choosing a subset of the sentences in the cluster. The way to choose sentences may differ between methods, but each method should have some way of giving each sentence a score to be able to sort them according to relevance.  
 
-Abstractive text summarization on the other hand involves paraphrasing sections of the cluster. By definition it involves generating text not necessarily appearing in the original documents. This generation involves abstracting words used to broaden themes and synonyms of the words in the texts. This part of the field of summarization is much less developed than extractive methods, mostly because it involves another field still in its early stages: that of natural language generation. NLG is the process of turning knowledge base information into natural language that is more easily understandable to humans.
+Abstractive text summarization on the other hand involves paraphrasing sections of the cluster. By definition it involves generating text not necessarily appearing in the original documents. This generation involves abstracting words used to broaden themes and synonyms of the words in the texts. This part of the field of summarization is much less developed than extractive methods, mostly because it involves another field still in its early stages: that of natural language generation. NLG is the process of turning knowledge based information into natural language that is more easily understandable to humans.
 
 The following subsections give examples of different text summarization methods and how they are used. The two first examples, Lexical Chains and LexRank, are extractive methods, while the last example, Opinosis, is an abstractive method. 
 
@@ -243,6 +243,8 @@ Beyond looking only at the first sentences when accepting a final sentence after
 
 Our implementation takes the ranked output from the Solr query at face value. Therefore, our program relies on how Solr ranks the output. There has been no evaluation on how well Solr has sorted the articles; it has only been assumed that they yield decent input for our LexRank. There has been no attempt to tweak the queries. Solr has a special syntax for queries that adds functionalities and one might imagine that using these functions may have improved our results. 
 
+\clearpage
+
 \bibliographystyle{plain}
 \bibliography{references}
 
@@ -251,8 +253,6 @@ Our implementation takes the ranked output from the Solr query at face value. Th
 
 \section{Queries for Evaluation}
 \label{app:queries}
-
-
 
 \begin{itemize}
 \item Mugg
