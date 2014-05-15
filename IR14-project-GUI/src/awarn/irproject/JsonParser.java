@@ -121,8 +121,6 @@ public class JsonParser {
 				no_docs++;
 			}
 
-			System.out.println("Number of docs: " + no_docs);
-			
 			if (App.ALL_SENTENCES && no_docs > 0) {
 				String[] allNameArray = allNames.toArray(new String[0]);
 				String[] allSentArray = allSentences.toArray(new String[0]);

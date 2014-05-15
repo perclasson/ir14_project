@@ -35,19 +35,19 @@ import lexRank.LexRank.Sentence;
 
 public class App extends Application {
 	// Return one sentence from all docs or not
-	public static final boolean ALL_SENTENCES = true;
+	public static boolean ALL_SENTENCES = true;
 
 	// Maximum number of docs used from solr search
-	public static final int MAX_NO_DOCS = 5;
+	public static int MAX_NO_DOCS = 1;
 
 	// Minimum number of sentences for a doc to be used (to avoid small docs)
-	public static final int MIN_SENTENCES_FOR_DOC = 1;
+	public static int MIN_SENTENCES_FOR_DOC = 1;
 
 	// Minimum number of words in sentence to be used
-	public static final int MIN_WORDS_FOR_SENTENCE = 5;
+	public static int MIN_WORDS_FOR_SENTENCE = 0;
 
 	// Max position for sentence in document, set to infinity to include all
-	public static final int MAX_SENTENCE_POSITION = 10;
+	public static int MAX_SENTENCE_POSITION = 5;
 
 	public static void main(String[] args) {
 		launch(args);
